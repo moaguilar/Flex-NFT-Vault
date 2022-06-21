@@ -1,24 +1,10 @@
 import { useState } from 'react';
 import NftCard from '../components/nftcard';
 import {fetchNFTs} from '../utils/fetchNFTs';
-//START WALLETCONNECT
+
 import NodeWalletConnect from "@walletconnect/node";
 import WalletConnectQRCodeModal from "@walletconnect/qrcode-modal";
-//END WALLETCONNECT
 
-const Explore = () => {
-
-    const [owner, setOwner] = useState("")
-    const [contractAddress, setContractAddress] = useState("")
-    const [NFTs, setNFTs] = useState("")
-    
-//START METAMASK
-
-//END METAMASK
-
-	
-//START WALLETCONNECT
-// Create connector
 const walletConnector = new NodeWalletConnect(
   {
     bridge: "https://bridge.walletconnect.org", // Required
@@ -33,64 +19,66 @@ const walletConnector = new NodeWalletConnect(
   }
 );
 
-// Check if connection is already established
-if (!walletConnector.connected) {
-  // create new session
-  walletConnector.createSession().then(() => {
-    // get uri for QR Code modal
-    const uri = walletConnector.uri;
-    // display QR Code modal
-    WalletConnectQRCodeModal.open(
-      uri,
-      () => {
-        console.log("QR Code Modal closed");
-      },
-      true // isNode = true
-    );
-  });
-}
 
-// Subscribe to connection events
-walletConnector.on("connect", (error, payload) => {
-  if (error) {
-    throw error;
-  }
+  
+const Explore = () => {
 
-  // Close QR Code Modal
-  WalletConnectQRCodeModal.close(
-    true // isNode = true
-  );
+    const [owner, setOwner] = useState("")
+    const [contractAddress, setContractAddress] = useState("")
+    const [NFTs, setNFTs] = useState("")
 
-  // Get provided accounts and chainId
-  const { accounts, chainId } = payload.params[0];
-});
-
-walletConnector.on("session_update", (error, payload) => {
-  if (error) {
-    throw error;
-  }
-
-  // Get updated accounts and chainId
-  const { accounts, chainId } = payload.params[0];
-});
-
-walletConnector.on("disconnect", (error, payload) => {
-  if (error) {
-    throw error;
-  }
-
-  // Delete walletConnector
-});
-//END WALLETCONNECT
+	walletConnector.on("connect", (error, payload) => {
+		if (error) {
+		throw error;
+		}
 	
+		// Close QR Code Modal
+		WalletConnectQRCodeModal.close(
+		true // isNode = true
+		);
+	
+		// Get provided accounts and chainId
+		const { accounts, chainId } = payload.params[0];
+	
+		//{fetchNFTs(contractAddress, contractAddress, setNFTs)}
+		{fetchNFTs("0xB392Fab5675D65d347AA2F9101b44c434ebF9d03", "0x4fEEc948eB3d6a2Eb37560d4B2c16f1C9fe72Ef6", setNFTs)}	// TESTING
+		//{fetchNFTs("0xB392Fab5675D65d347AA2F9101b44c434ebF9d03", "0x5AD0aB392b9647D2293361864D4c0d68D52111A3", setNFTs)}	// TESTING
+		//{fetchNFTs(accounts[0], "0x4fEEc948eB3d6a2Eb37560d4B2c16f1C9fe72Ef6", setNFTs)}	// LIVE
+	
+	});
+	
+
+	function openConnection(){
+
+		if (!walletConnector.connected) {
+			// create new session
+			walletConnector.createSession().then(() => {
+				// get uri for QR Code modal
+				const uri = walletConnector.uri;
+				// display QR Code modal
+				WalletConnectQRCodeModal.open(
+					uri,
+					() => {
+					console.log("QR Code Modal closed");
+					},
+					true // isNode = true
+				);
+			});
+		}
+	  
+	}
+
+	if (walletConnector.connected) {
+		walletConnector.killSession();
+	}
+
     return (
         <div>
 			<header className='text-white text-center' background='./images/circle-lrg.png'>
             <div className='flex alchemy'>
                 <div className='flex flex-wrap'>
 					<div><img src="./images/flex-white.png" width="200" ></img></div>
-					<div><button>Connect</button></div>
-					<div><button>Connect</button></div>
+					<div><button onClick={() => openConnection()}>Connect Wallet</button></div>
                 </div>
 				</div>
 			</header>
@@ -127,7 +115,7 @@ walletConnector.on("disconnect", (error, payload) => {
 						</ol>
 					</div>
                     </div>
-                    <div className='flex flex-col items-center justify-center mb-4 w-2/6 gap-y-2 '>
+                 	<div className='flex flex-col items-center justify-center mb-4 w-2/6 gap-y-2 '>
                         <input className="border rounded-sm focus:outline-none py-2 px-3 w-full" value={owner} onChange={(e) => setOwner(e.target.value)} placeholder='Insert your wallet address'></input>
                         <input className="focus:outline-none rounded-sm py-2 px-3 w-full" value={contractAddress} onChange={(e) => setContractAddress(e.target.value)} placeholder='Insert NFT Contract address (optional)'></input>
                     </div>
@@ -229,8 +217,10 @@ walletConnector.on("disconnect", (error, payload) => {
                 }
             </section>
         </div>
+
     )
-}
+
+	}
 
 
 export default Explore
