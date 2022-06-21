@@ -2,24 +2,28 @@
 const apiKey = "GqYATYYw3GTJP7CiJk7hgTRVsKPQ701V";
 const endpoint = `https://eth-mainnet.alchemyapi.io/v2/${apiKey}`;
 
-export const fetchNFTs = async (owner, contractAddress, setNFTs, retryAttempt) => {
+export const fetchNFTs = async (owner, contractAddress1, contractAddress2, setNFTs, retryAttempt) => {
+    let arrNFT = new Array()
     if (retryAttempt === 5) {
         return;
     }
     if (owner) {
-        let data;
+        let data1;
+        let data2;
         try {
-            if (contractAddress) {
-                data = await fetch(`${endpoint}/getNFTs?owner=${owner}&contractAddresses%5B%5D=${contractAddress}`).then(data => data.json())
+            if (contractAddress1) {
+                data1 = await fetch(`${endpoint}/getNFTs?owner=${owner}&contractAddresses%5B%5D=${contractAddress1}`).then(data1 => data1.json())
+                data2 = await fetch(`${endpoint}/getNFTs?owner=${owner}&contractAddresses%5B%5D=${contractAddress2}`).then(data2 => data2.json())
             } else {
-                data = await fetch(`${endpoint}/getNFTs?owner=${owner}`).then(data => data.json())
+                data1 = await fetch(`${endpoint}/getNFTs?owner=${owner}`).then(data => data.json())
             }
         } catch (e) {
-            fetchNFTs(endpoint, owner, contractAddress, setNFTs, retryAttempt+1)
+            fetchNFTs(endpoint, owner, contractAddress1, contractAddress2, setNFTs, retryAttempt+1)
         }
 
-        setNFTs(data.ownedNfts)
-        return data
+        arrNFT = data1.ownedNfts.concat(data2.ownedNfts)
+        setNFTs(arrNFT)
+        return arrNFT
     }
 }
 
