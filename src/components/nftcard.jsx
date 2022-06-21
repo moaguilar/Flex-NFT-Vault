@@ -1,7 +1,12 @@
 const NftCard = ({ image, id, title, address, description, attributes }) => {
+    let imgDisplay = <img className='w-full rounded-t-md' key={id} src={image}></img>
+    if(image.substr(image.length-4, 4) != ".jpg" && image.substr(image.length-4, 4) != ".png") {
+        imgDisplay = <img className='w-full rounded-t-md' key={id} src={'https://ipfs.io/ipfs/QmXwwar2TZyQPUm2mmQRLkKEbGYLLKPxt6bwagAzjUWw9E/9082.png'}></img>
+    }
+
     return (
         <div className="w-1/4 mr-3 mb-4 bg-slate-100 rounded-md" >
-            <img className='w-full rounded-t-md' key={id} src={image}></img>
+            {imgDisplay}
             <div className="p-3">
                 <div className="flex mb-3">
                     <div className="flex-grow">
