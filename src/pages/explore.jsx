@@ -40,11 +40,9 @@ const Explore = () => {
 		// Get provided accounts and chainId
 		const { accounts, chainId } = payload.params[0];
 	
-		//{fetchNFTs(contractAddress, contractAddress, setNFTs)}
-		{fetchNFTs("0xB392Fab5675D65d347AA2F9101b44c434ebF9d03", "0x4fEEc948eB3d6a2Eb37560d4B2c16f1C9fe72Ef6", setNFTs)}	// TESTING
-		//{fetchNFTs("0xB392Fab5675D65d347AA2F9101b44c434ebF9d03", "0x5AD0aB392b9647D2293361864D4c0d68D52111A3", setNFTs)}	// TESTING
-		//{fetchNFTs(accounts[0], "0x4fEEc948eB3d6a2Eb37560d4B2c16f1C9fe72Ef6", setNFTs)}	// LIVE
-	
+		{fetchNFTs("0xB392Fab5675D65d347AA2F9101b44c434ebF9d03", "0x5AD0aB392b9647D2293361864D4c0d68D52111A3", "0x5F0e4269e4057Bc0f0f665d68f3106e2386D8bf4", setNFTs)}	// TESTING
+		//{fetchNFTs(accounts[0], "0x5AD0aB392b9647D2293361864D4c0d68D52111A3", "0x5F0e4269e4057Bc0f0f665d68f3106e2386D8bf4", setNFTs)}	// PRODUCTION
+
 	});
 	
 
