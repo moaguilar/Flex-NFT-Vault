@@ -66,6 +66,19 @@ const Explore = () => {
 	  
 	}
 
+	function openMetamask() {
+		console.log("metamask");
+		if(window.ethereum){
+			window.ethereum.request({method:'eth_requestAccounts'})
+			.then(res=>{
+				//{fetchNFTs("0xB392Fab5675D65d347AA2F9101b44c434ebF9d03", "0x5AD0aB392b9647D2293361864D4c0d68D52111A3", "0x5F0e4269e4057Bc0f0f665d68f3106e2386D8bf4", setNFTs)}	// TESTING
+				{fetchNFTs(res[0], "0x5AD0aB392b9647D2293361864D4c0d68D52111A3", "0x5F0e4269e4057Bc0f0f665d68f3106e2386D8bf4", setNFTs)}	// PRODUCTION
+			})
+		}else{
+			alert("install metamask extension!!")
+		}		
+	}
+
 	if (walletConnector.connected) {
 		walletConnector.killSession();
 	}
